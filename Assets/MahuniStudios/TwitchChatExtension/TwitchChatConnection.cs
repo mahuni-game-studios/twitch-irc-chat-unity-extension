@@ -10,7 +10,10 @@ namespace Mahuni.Twitch.Extension
     using System.Net.Sockets;
     using UnityEngine;
 
-    // https://dev.twitch.tv/docs/chat/irc#connecting-to-the-twitch-irc-server
+    /// <summary>
+    /// Connect to Twitch chat to read and write messages using IRC protocol
+    /// More infos: https://dev.twitch.tv/docs/chat/irc#connecting-to-the-twitch-irc-server
+    /// </summary>
     public static class TwitchChatConnection
     {
         public static event Action<bool> OnConnectionReady;
@@ -22,7 +25,7 @@ namespace Mahuni.Twitch.Extension
         private static StreamReader chatStreamReader;
         private static StreamWriter chatStreamWriter;
         private static string channelName;
-        private static ChatUser currentUser;
+        private static ChatUser currentUser; // This is us when writing into chat
 
         private const string TCP_CLIENT_HOST = "irc.chat.twitch.tv";
         private const string MESSAGE_CONNECT_SUCCESS = "Welcome, GLHF!";
@@ -36,6 +39,10 @@ namespace Mahuni.Twitch.Extension
 
         #region Initialization
 
+        /// <summary>
+        /// Initialize the connection
+        /// </summary>
+        /// <param name="channel">The name of the channel to connect the chat from</param>
         public static void Init(string channel)
         {
             channelName = channel.ToLower();
@@ -49,6 +56,10 @@ namespace Mahuni.Twitch.Extension
             }
         }
 
+        /// <summary>
+        /// Authentication finished
+        /// </summary>
+        /// <param name="success">True if authentication was successful, false if it failed</param>
         private static void OnAuthenticated(bool success)
         {
             if (!success)
@@ -76,6 +87,9 @@ namespace Mahuni.Twitch.Extension
             OnConnectionReady?.Invoke(true);
         }
 
+        /// <summary>
+        /// Coroutine to try to connect to chat and notify on the connection success / failure
+        /// </summary>
         public static IEnumerator ConnectChat()
         {
             tcpClient = new TcpClient(TCP_CLIENT_HOST, 6667);
@@ -123,6 +137,9 @@ namespace Mahuni.Twitch.Extension
 
         #region Keep Alive
 
+        /// <summary>
+        /// Ping was received, so we respond with a pong to keep the chat connection alive
+        /// </summary>
         private static void OnPingReceived()
         {
             Debug.Log("Ping received. Sending pong...");
@@ -133,6 +150,9 @@ namespace Mahuni.Twitch.Extension
 
         #region Read Chat
 
+        /// <summary>
+        /// Coroutine to keep reading the chat every frame
+        /// </summary>
         private static IEnumerator ReadChat()
         {
             while (tcpClient != null)
@@ -143,6 +163,9 @@ namespace Mahuni.Twitch.Extension
             }
         }
 
+        /// <summary>
+        /// Read through the latest chat messages and forward to next methods according to the message type
+        /// </summary>
         private static void Read()
         {
             string message = chatStreamReader.ReadLine();
@@ -157,6 +180,7 @@ namespace Mahuni.Twitch.Extension
             else if (message.Equals(SERVER_PING_MESSAGE)) OnPingReceived();
             else if (message.Contains($"{USER_STATE_CODE} #{channelName}")) OnUserInfoUpdated(message);
 
+            // If there are more chat messages to read, continue to call itself until all messages are processed
             if (chatStreamReader.Peek() > 0) Read();
         }
 
@@ -195,9 +219,13 @@ namespace Mahuni.Twitch.Extension
             OnClientJoinedChat?.Invoke(username);
         }
 
+        /// <summary>
+        /// We get information about our own user
+        /// </summary>
+        /// <param name="rawMessage">The raw message that was received</param>
         private static void OnUserInfoUpdated(string rawMessage)
         {
-            // We have already set the user information
+            // We have already set the user information and can return
             if (!string.IsNullOrEmpty(currentUser.displayname)) return;
 
             string userName = rawMessage.Split("display-name=")[1].Split(";", 2)[0];
@@ -219,6 +247,10 @@ namespace Mahuni.Twitch.Extension
 
         #region Write Chat
 
+        /// <summary>
+        /// Write a message into chat
+        /// </summary>
+        /// <param name="message">The message to send</param>
         public static void Write(string message)
         {
             chatStreamWriter.WriteLine($"{USER_MESSAGE_CODE} #{channelName} :{message}");
@@ -275,7 +307,6 @@ namespace Mahuni.Twitch.Extension
 
             return json;
         }
-
 
         // https://dev.twitch.tv/docs/chat/irc#irc-tag-reference
         [Serializable]

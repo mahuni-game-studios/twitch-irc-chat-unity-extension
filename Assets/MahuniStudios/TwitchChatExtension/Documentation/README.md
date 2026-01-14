@@ -3,11 +3,11 @@
 [![Downloads](https://img.shields.io/github/downloads/mahuni-game-studios/twitch-irc-chat-unity-extension/total.svg)](https://github.com/mahuni-game-studios/twitch-irc-chat-unity-extension/releases/)
 [![Latest Version](https://img.shields.io/github/v/release/mahuni-game-studios/twitch-irc-chat-unity-extension)](https://github.com/mahuni-game-studios/twitch-irc-chat-unity-extension/releases/tag/v1.0)
 
-An extension to to read and write into the Twitch chat using IRC protocol via Unity.
+An Unity extension to read and write into the Twitch chat using IRC protocol.
 
 ## Code Snippet Examples
 
-The simplest implementation to give your game permission to access and use the Twitch API!
+The simplest implementation to give your game permission to access and use the Twitch API and read and write to chat!
 
 ### Authentication
 
@@ -17,13 +17,13 @@ public class YourUnityClass : MonoBehaviour
     private void Start()
     {        
         // Register to authentication finished event
-        TwitchWebRequestAuthentication.OnAuthenticated += OnAuthenticated;
+        TwitchAuthentication.OnAuthenticated += OnAuthenticated;
         
         // Set relevant information to the connection
-        TwitchWebRequestAuthentication.ConnectionInformation infos = new("your-client-id", new List<string>(){TwitchWebRequestAuthentication.ConnectionInformation.CHANNEL_MANAGE_REDEMPTIONS});
+        TwitchAuthentication.ConnectionInformation infos = new("your-client-id", new List<string>(){TwitchWebRequestAuthentication.ConnectionInformation.CHAT_READ, TwitchWebRequestAuthentication.ConnectionInformation.CHAT_EDIT});
         
         // Start authentication
-        TwitchWebRequestAuthentication.StartAuthenticationValidation(this, infos);
+        TwitchAuthentication.StartAuthenticationValidation(this, infos);
     }
     
     // Authentication has finished
@@ -31,8 +31,79 @@ public class YourUnityClass : MonoBehaviour
     {
         if (success)
         {
-            // TODO: Start using the Twitch API from here!
+            // TODO: Start using the extension from here!
         }
+    }
+}
+```
+
+### Connect to chat
+
+Please note that connecting to the chat only works after successful authentication.
+
+```cs
+public class YourUnityClass : MonoBehaviour
+{   
+    private void Start()
+    {
+        // Register to chat events
+        TwitchChatConnection.OnConnectionReady += OnChatConnectionReady;
+        TwitchChatConnection.OnConnected += OnChatConnected;        
+        TwitchChatConnection.OnChatMessageReceived += OnChatMessageReceived;
+        
+        // Initialize the connection
+        TwitchChatConnection.Init("channel-name");
+    }
+      
+    private void OnChatConnectionReady(bool success)
+    {
+        if (success)
+        {
+           // Wait for chat to be connected 
+           StartCoroutine(TwitchChatConnection.ConnectChat());
+        }
+    }
+    
+    private void OnChatConnected(bool success)
+    {
+        if (success)
+        {
+            // TODO: Now you can start to read from or write to chat!
+        }
+    }
+}
+```
+
+### Read chat
+
+Please note that reading the chat only works after successful authentication and chat connection.
+
+```cs
+public class YourUnityClass : MonoBehaviour
+{   
+    private void Start()
+    {
+        // Register to chat message received event       
+        TwitchChatConnection.OnChatMessageReceived += OnChatMessageReceived;
+    }
+      
+    private void OnChatMessageReceived(TwitchChatConnection.ChatUser user, string message)
+    {
+        // TODO: Use the chat message and user information as you like
+    }
+}
+```
+
+### Write to chat
+
+Please note that writing to the chat only works after successful authentication and chat connection.
+
+```cs
+public class YourUnityClass : MonoBehaviour
+{   
+    private void Start()
+    {
+        TwitchChatConnection.Write("Hello world! <3");
     }
 }
 ```
@@ -54,6 +125,14 @@ To be able to interact with the Twitch API, you need to register your Twitch app
 
 To use the provided `TwitchChatExtension_Demo` scene, the `TextMeshPro` package is required. If you do not have it yet imported into your project, simply opening the `TwitchChatExtension_Demo.scene` will ask if you want to import it. Select the `Import TMP Essentials` option, close the `TMP Importer` and you are good to go.
 
+#### Twitch Authentication Extension
+
+This repository uses the [Unity Twitch Authentication Extension by Mahuni Game Studios](https://github.com/mahuni-game-studios/twitch-authentication-unity-extension) as git submodule. Be sure to either pull the submodule or grab / download / clone the authentication extension manually.
+
+- To clone the repository with submodules: `git clone --recurse-submodules`
+- To update the cloned repository to get the submodules: `git submodule update --init --recursive`
+- To download the extension, go to [Github](https://github.com/mahuni-game-studios/twitch-authentication-unity-extension), download it and drag and drop it somewhere into the `Assets/` folder
+
 ### Setup project
-1. Either open this project or import it to your own project in the Unity Editor
-2. Start using the `TwitchAuthentication` script right away, or take a look into the `TwitchAuthenticationExtension_Demo` scene to find an easy example implementation.
+1. Either open this project or import it to your own project in the Unity Editor. 
+2. Start using the `TwitchChatConnection` script right away, or take a look into the `TwitchChatExtension_Demo` scene to find an easy example implementation.
