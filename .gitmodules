@@ -1,0 +1,3 @@
+[submodule "Assets/MahuniStudios/TwitchAuthentication"]
+	path = Assets/MahuniStudios/TwitchAuthentication
+	url = https://github.com/mahuni-game-studios/twitch-authentication-unity-extension
