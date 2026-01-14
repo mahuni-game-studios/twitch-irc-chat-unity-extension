@@ -3,13 +3,15 @@
 [![Downloads](https://img.shields.io/github/downloads/mahuni-game-studios/twitch-irc-chat-unity-extension/total.svg)](https://github.com/mahuni-game-studios/twitch-irc-chat-unity-extension/releases/)
 [![Latest Version](https://img.shields.io/github/v/release/mahuni-game-studios/twitch-irc-chat-unity-extension)](https://github.com/mahuni-game-studios/twitch-irc-chat-unity-extension/releases/tag/v1.0)
 
-An Unity extension to read and write into the Twitch chat using IRC protocol.
+A Unity extension to read and write into the Twitch chat using IRC protocol.
 
 ## Code Snippet Examples
 
-The simplest implementation to give your game permission to access and use the Twitch API and read and write to chat!
+The simplest implementation to give your application permission to use the Twitch API and finally connect, read and write to chat!
 
 ### Authentication
+
+The authentication logic is packed in a git submodule and is needed if you want to use the extension as is. Read [this](#twitch-authentication-extension) to find out how to get it.
 
 ```cs
 public class YourUnityClass : MonoBehaviour
@@ -121,18 +123,19 @@ To be able to interact with the Twitch API, you need to register your Twitch app
 
 <font color="red">The `Client ID` should stay secret, do not share or show it!</font>
 
-#### Demo scene
-
-To use the provided `TwitchChatExtension_Demo` scene, the `TextMeshPro` package is required. If you do not have it yet imported into your project, simply opening the `TwitchChatExtension_Demo.scene` will ask if you want to import it. Select the `Import TMP Essentials` option, close the `TMP Importer` and you are good to go.
-
 #### Twitch Authentication Extension
 
 This repository uses the [Unity Twitch Authentication Extension by Mahuni Game Studios](https://github.com/mahuni-game-studios/twitch-authentication-unity-extension) as git submodule. Be sure to either pull the submodule or grab / download / clone the authentication extension manually.
 
 - To clone the repository with submodules: `git clone --recurse-submodules`
 - To update the cloned repository to get the submodules: `git submodule update --init --recursive`
-- To download the extension, go to [Github](https://github.com/mahuni-game-studios/twitch-authentication-unity-extension), download it and drag and drop it somewhere into the `Assets/` folder
+- To download the extension, go to [GitHub](https://github.com/mahuni-game-studios/twitch-authentication-unity-extension), download it and drag and drop it somewhere into the `Assets/` folder
 
-### Setup project
-1. Either open this project or import it to your own project in the Unity Editor. 
-2. Start using the `TwitchChatConnection` script right away, or take a look into the `TwitchChatExtension_Demo` scene to find an easy example implementation.
+#### Demo scene
+
+To use the provided `TwitchChatExtension_Demo` scene, the `TextMeshPro` package is required. If you do not have it yet imported into your project, simply opening the `TwitchChatExtension_Demo.scene` will ask if you want to import it. Select the `Import TMP Essentials` option, close the `TMP Importer` and you are good to go.
+
+### Setup Unity project
+1. Either open this project directly or import it to your own project in the Unity Editor.
+2. Make sure the git submodules are installed, see [here](#twitch-authentication-extension)
+3. Start using the `TwitchChatConnection` script right away, or take a look into the `TwitchChatExtension_Demo` scene to find an easy example implementation.

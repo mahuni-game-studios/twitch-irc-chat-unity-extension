@@ -1,4 +1,4 @@
-// © Copyright 2025 Mahuni Game Studios
+// © Copyright 2026 Mahuni Game Studios
 
 namespace Mahuni.Twitch.Extension
 {
