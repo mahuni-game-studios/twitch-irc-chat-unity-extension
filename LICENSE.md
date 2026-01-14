@@ -1,0 +1,1 @@
+./Assets/MahuniStudios/TwitchChatExtension/Documentation/LICENSE.md
