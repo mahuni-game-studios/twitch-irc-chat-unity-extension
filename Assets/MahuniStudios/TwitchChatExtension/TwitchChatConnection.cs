@@ -195,6 +195,7 @@ namespace Mahuni.Twitch.Extension
             string messageContent = split[1];
 
             // Remove chars that are not letters or digits, especially important for control characters
+            // todo: careful, messages tagging other users with @ will still break the parsing!
             messageContent = new string(messageContent.Where(c => char.IsLetterOrDigit(c) || (c >= ' ' && c <= byte.MaxValue)).ToArray());
 
             // Try to parse the message as JSON to receive the ChatUser information
