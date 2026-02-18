@@ -136,6 +136,6 @@ This repository uses the [Unity Twitch Authentication Extension by Mahuni Game S
 To use the provided `TwitchChatExtension_Demo` scene, the `TextMeshPro` package is required. If you do not have it yet imported into your project, simply opening the `TwitchChatExtension_Demo.scene` will ask if you want to import it. Select the `Import TMP Essentials` option, close the `TMP Importer` and you are good to go.
 
 ### Setup Unity project
-1. Either open this project directly or import it to your own project in the Unity Editor.
+1. Either open this project directly or import it to your own project in the Unity Editor
 2. Make sure the git submodules are installed, see [here](#twitch-authentication-extension)
 3. Start using the `TwitchChatConnection` script right away, or take a look into the `TwitchChatExtension_Demo` scene to find an easy example implementation.

@@ -278,7 +278,8 @@ namespace Mahuni.Twitch.Extension
                 return string.Empty;
             }
 
-            string userData = result.First();
+            // Sometimes Twitch sends '\s' instead of whitespace, which needs to be replaced as it is an escape character for JSON
+            string userData = result.First().Replace("\\s", "");
 
             // To make message compatible with C#, we need to remove variable names containing minus, so we turn e.g. "badge-info" to "badgeinfo"
             userData = userData.Replace("-", "");
