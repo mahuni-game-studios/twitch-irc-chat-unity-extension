@@ -65,7 +65,7 @@ public class TwitchChatExtensionDemoUI : MonoBehaviour
     private void OnAuthenticationButtonClicked()
     {
         TwitchAuthentication.ConnectionInformation infos = new(twitchClientIdText.text, new List<string>{TwitchAuthentication.ConnectionInformation.CHAT_READ, TwitchAuthentication.ConnectionInformation.CHAT_EDIT});
-        TwitchAuthentication.StartAuthenticationValidation(this, infos);
+        TwitchAuthentication.StartAuthenticationValidation(channelNameText.text, this, infos);
     }
     
     /// <summary>
